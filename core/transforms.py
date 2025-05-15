@@ -210,7 +210,6 @@ def compare_distortion(distortion, inset=True):
     mask = y
     
     # -- example usage (image and mask)
-    # image_t, mask_t = distortion(image, mask) # not implemented
     image_t = distortion(image)
     mask_t = distortion(mask)    
 
