@@ -1,8 +1,9 @@
 # [creme] custom additions
-media/
 output/
 models/
 data/ds25s/test_aug/
+data/ds25d/
+data/media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -17,7 +17,6 @@ python scripts/augment.py
 ```
 
 ## Create your own COCO dataset with utils.dataset
-
 ```python
 # import all functions
 from utils.dataset import *
@@ -51,8 +50,56 @@ mean, std = get_folder_values(target_folder)
 ```
 
 
-# Extra
+## Training and evaluating a new model
+For training a new model, it is recommended to edit the information concerning your target dataset in core.models and then launch train1c.py, as in the provided example. Edit the scripts according to your hardware:
+```bash
+python train1c_r50a.py
+```
 
+A trained model can be evaluated based on a dataset that contains ground-truths with an evaluate.py script (note: this will only work if you generated or downloaded a suitable model.pth):
+```bash
+python evaluate1c_r50a.py
+```
+
+If you need to store the full segmentation generate by your model (each ellipsoid's coordinate and size), please use a predict.py script. The data will be stored in the target folder + **masks/analysis.csv** file, which can be later employed to produce high-quality plots (check the scripts folder):
+```bash
+python predict1c_r50a.py
+```
+
+
+## Postprocessing 
+This module has functions to inspect a dataset or predictions from a model:
+
+```python
+from utils.postproc import *
+# check an annotated dataset
+dataset_path = 'data/ds25s/test_aug/'
+coco_path = dataset_path + 'clean.json'
+imgs_path = dataset_path + 'imgs/'
+plot_sample_images(coco_path, imgs_path, save=False)
+# segmentation using a pre-trained model
+from core.models import get_train_cfg_r50a
+model_id = 'ds25d_r50a_190325'
+model_path = f'output/{model_id}/model_final.pth'
+cfg = get_train_cfg_r50a(model_id)
+# single image
+target_image = 'data/ds25s/test_aug/imgs/1.png'
+single_overlay(target_image, model_path, cfg)
+# all images in a folder
+target_folder = 'data/ds25s/test_aug/imgs'
+batch_overlay(target_folder, model_path, cfg)
+```
+
+To obtain more information on the model training (based on the metrics.json file):
+```python
+from utils.postproc import *
+model_id = 'ds25d_r50a_190325'
+plot_metrics_3x3(f'output/{model_id}/metrics.json')
+show_min_validation_loss(f'output/{model_id}/metrics.json')
+```
+
+
+# Extra
 ## Setup to extract frames from videos with utils.preproc
 To avoid conflicts with detectron2 (which works best in python 3.9), we recommend a python 3.12+ envinronment to run the preproc functions. In this new environment, you may use as reference:
 

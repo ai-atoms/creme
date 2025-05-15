@@ -1,28 +1,30 @@
-# python3
-# postprocessing predictions and metadata
+'''
+python3
+creme utils.postproc module
+utility functions for postprocessing data
+'''
 
-import sys
-import os
-import logging
-import random
-import numpy as np
-import torch, torchvision
-import cv2
 import json
-import pandas as pd
-
+import logging
+import os
+import random
+import sys
 from datetime import datetime
+
+import cv2
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import torch
+import torchvision
 from PIL import Image
-
-from detectron2.data.datasets import register_coco_instances
-from detectron2.config import get_cfg
-from detectron2 import model_zoo
-from detectron2.engine import DefaultTrainer, DefaultPredictor
-from detectron2.utils.visualizer import Visualizer, ColorMode
-
-from taurik.utils import get_simple_cfg
 from pycocotools import mask as mask_utils
+
+from detectron2 import model_zoo
+from detectron2.config import get_cfg
+from detectron2.data.datasets import register_coco_instances
+from detectron2.engine import DefaultPredictor, DefaultTrainer
+from detectron2.utils.visualizer import ColorMode, Visualizer
 
 
 def load_metrics_as_pandas(json_path):
@@ -120,9 +122,8 @@ def plot_metrics_3x3b(json_path):
     plt.savefig(directory+'metrics_b.png')
 
 
-def single_overlay(target_image, model_path, threshold=0.682, save=True):
+def single_overlay(target_image, model_path, cfg, threshold=0.8, save=True):
     # get the model and set paths
-    cfg = get_simple_cfg(os.path.dirname(model_path))
     cfg.MODEL.WEIGHTS = f'{model_path}'
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = (threshold)  # testing threshold
     filename = os.path.splitext(os.path.basename(target_image))[0]
@@ -163,12 +164,12 @@ def single_overlay(target_image, model_path, threshold=0.682, save=True):
     print("Time needed for running:", datetime.now() - start)
     
 
-def batch_overlay(target_folder, model_path, threshold=0.682, save=True):
+def batch_overlay(target_folder, model_path, cfg, threshold=0.8, save=True):
     for filename in os.listdir(target_folder):
         if filename.endswith(".png"): # check extension
             print (f'Processing {filename}...')
             image_path = os.path.join(target_folder, filename)
-            single_overlay(image_path, model_path, threshold, save)
+            single_overlay(image_path, model_path, cfg, threshold, save)
 
 
 def show_min_validation_loss(json_path):
@@ -214,7 +215,7 @@ def get_annotations_for_image(image_id, coco_data):
     return [ann for ann in coco_data["annotations"] if ann["image_id"] == image_id]
 
 
-def plot_sample_images(coco_path, img_folder, num_samples=8):
+def plot_sample_images(coco_path, img_folder, num_samples=8, save=True):
     """Plot a random sample of images with segmentation overlays."""
     # Load COCO data
     coco_data = load_coco_annotations(coco_path)
@@ -254,8 +255,11 @@ def plot_sample_images(coco_path, img_folder, num_samples=8):
         axes[i].axis("off")
 
     plt.tight_layout()
-    plt.savefig('samples.png')
+    if save:
+        plt.savefig('output/samples.png')
+    else:
+        plt.show()
 
 
 if __name__ == '__main__':
-    print ('Postprocessing (utils) module loaded;')
+    print ('[creme] utils.postproc module loaded;')

@@ -8,7 +8,7 @@ This package enables automated recognition of crystal defects in electron micros
 [Camilo A. F. Salvador](https://github.com/camilofs)
 
 ### Contributors  
-Thomas Bylik, Mihai-Cosmin Marinica
+Thomas Bylik, Mihai-Cosmin Marinica.
 
 ### Reference Paper  
 **High-throughput analysis of dislocation loops in irradiated metals using Mask R-CNN**  
@@ -30,4 +30,5 @@ To reproduce data from the reference paper, use the [Jupyter notebook](examples/
 
 ### License
 MIT
+*This work has been carried out within the  Cross-disciplinary initiative for digital science of the French Alternative Energies and Atomic Energy Commission (CEA), 2025.*
 
