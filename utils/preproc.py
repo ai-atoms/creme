@@ -1,11 +1,17 @@
-# python3
-# preprocessing images or videos - uses HyperSpy to manage dm4 files;
+'''
+python3
+creme utils.preproc module
+utility functions for extracting frames from videos
+uses HyperSpy to manage dm4 files;
+'''
 
-import hyperspy.api as hs
-import numpy as np
-import os, time
+import os
+import time
+
 import cv2
+import hyperspy.api as hs
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def integrate_frames_gatan(target_folder, output_file, n_frames=8, clahe=False, plot=False):
@@ -359,5 +365,5 @@ def crop_center_video(input_path, output_path, size=512):
 
 
 if __name__ == '__main__':
-    print ('Preprocessing (utils) module loaded;')
+    print ('[creme] utils.preproc module loaded;')
 

@@ -1,4 +1,5 @@
 # [creme] custom additions
+media/
 output/
 models/
 data/ds25s/test_aug/
