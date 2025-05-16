@@ -20,15 +20,20 @@ If you use this package, please cite:
 [BibTeX to be included]
 ```
 
+If you use our annotated images, please also cite [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15436311.svg)](https://doi.org/10.5281/zenodo.15436311)
+
+
+
 ### Installation
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Usage
-To reproduce data from the reference paper, use the [Jupyter notebook](examples/video3.ipynb). For an independent project, you may call scripts from the terminal as shown in [utils](utils/README.md)
+To reproduce data from the reference paper, use the [Jupyter notebook](examples/video3.ipynb). For an independent project, you may call scripts from the terminal as shown in [utils](utils/README.md). Supplementary data and model snapshots can be found at [zenodo](https://doi.org/10.5281/zenodo.15436310).
 
 ### License
-MIT
+MIT, CEA Paris-Saclay 2025 (C)
+
 *This work has been carried out within the  Cross-disciplinary initiative for digital science of the French Alternative Energies and Atomic Energy Commission (CEA), 2025.*
 
