@@ -26,7 +26,7 @@ pip install -r requirements.txt
 ```
 
 ### Usage
-To reproduce data from the reference paper, use the [Jupyter notebook](examples/video3.ipynb). For an independent project, you may call scripts from the terminal as shown in [utils](utils/readme.md)
+To reproduce data from the reference paper, use the [Jupyter notebook](examples/video3.ipynb). For an independent project, you may call scripts from the terminal as shown in [utils](utils/README.md)
 
 ### License
 MIT

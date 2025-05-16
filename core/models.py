@@ -102,24 +102,33 @@ def get_train_cfg_101d(job_name):
     return cfg
 
 
-def get_train_cfg_r50a(job_name):
-    '''ResNet-50 with optimal FPN hyperparameters'''
-    # dataset
-    register_coco_instances('train', {}, 'data/ds25d/train_aug/clean.json', 'data/ds25d/train_aug/imgs')
-    register_coco_instances('val', {}, 'data/ds25d/test_aug/clean.json', 'data/ds25d/test_aug/imgs')
-
-    # backbone model
+def get_train_cfg_r50a(job_name, register_datasets=True):
+    '''Returns a Detectron2 config for ResNet-50 + FPN.
+    
+    Args:
+        job_name (str): Output directory name.
+        register_datasets (bool): If True, registers COCO datasets (for training).
+                                  If False (default), skips registration (for inference).
+    '''
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
 
-    cfg.DATASETS.TRAIN = ("train",)
-    cfg.DATASETS.TEST = ("val",)
+    # only register datasets if explicitly requested (for training)
+    if register_datasets:
+        from detectron2.data.datasets import register_coco_instances
+        register_coco_instances('train', {}, 'data/ds25d/train_aug/clean.json', 'data/ds25d/train_aug/imgs')
+        register_coco_instances('val', {}, 'data/ds25d/test_aug/clean.json', 'data/ds25d/test_aug/imgs')
+        cfg.DATASETS.TRAIN = ("train",)
+        cfg.DATASETS.TEST = ("val",)
+    else:
+        # if not registering, avoid setting DATASETS (or set to empty)
+        cfg.DATASETS.TRAIN = ()
+        cfg.DATASETS.TEST = ()
+
     cfg.MODEL.PIXEL_MEAN = [149.6, 149.6, 149.6]
     cfg.MODEL.PIXEL_STD = [35.6, 35.6, 35.6]
     cfg.OUTPUT_DIR = str(f'output/{job_name}')
-    
-    # update the number of classes
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # Change from 80 to 1
+    cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # single class
 
     # using pre-trained weights
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
@@ -158,8 +167,7 @@ def get_train_cfg_r50a(job_name):
 
     # resource allocation
     cfg.DATALOADER.NUM_WORKERS = 4
-    cuda_avail = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    cfg.MODEL.DEVICE = cuda_avail
+    cfg.MODEL.DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     
     return cfg
 
